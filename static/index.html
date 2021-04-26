@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			{{message}}{{name}}<br/>{{htmlValue}}
+			<p v-html="htmlValue"></p>
+			<div v-bind:class="color"> test.....</div>
+			<div>{{ok?'yes':'no'}}</div>
+			<div v-bind:class="{active:isActive}">
+				i love the world
+			</div>
+			<div :style="{color:red}">
+				I love the life
+			</div>
+			
+			<div>
+				<ul v-for="item,index,key in items">
+					<li>{{index}} {{item.message}} {{key}}</li>
+				</ul>
+			</div>
+			<button v-on:click="click(wunai)">点我</button>
+			<br/>
+			<input type="text" v-model="text" placeholder="edit me" />
+			<span>{{text}}</span>
+			<br>
+			<wunai-test count="2" @click='click'></wunai-test>
+			<test></test>
+		</div>
+		<script>
+		    var dataObj = {name:1,message:2,htmlValue:0,ok:true,items:["你好",{message:"hello"},{message:"世界"}],wunai:9999,text:"wunai"};
+			var app = new Vue({
+				el: '#app',
+				data:dataObj,
+				beforeCreate() {
+					console.log('beforeCrate');
+				},
+				beforeUpdate(){
+					console.log('beforeUpdate');
+				},
+				created:function(){
+					console.log('created');
+				},
+				beforeMount:function(){
+					console.log('beforeMount');
+				},
+				mounted:function(){
+					console.log('mounted');
+				},
+				methods:{
+					click:function(str){
+						alert(str);
+						alert(this.name);
+					}
+				},
+				components:{
+					test : {
+						template:"<h2>h2...</h2>"
+					}
+				}
+				});
+		    dataObj.name="hello world!!";
+			dataObj.message="the earth,";
+			//app.data.name='test';
+			//app.age ="test11111";
+			//dataObj.name = app.age;
+			app.$data.name="你好！";
+			app.$watch('name',function(newval,oldval){
+				console.log("new value = "+newval);
+				console.log("old value =" +oldval);
+			});
+			app.$data.name="hello world !!";
+			app.$data.name="hello ddddddddd !!";
+			dataObj.htmlValue='<span style="color:red">你好！</span>';
+			app.color='red';
+			app.ok=false;
+			app.isActive=true;
+			app.red="#FF0000";
+			Vue.component('wunai-test',{
+				props:['title','count'],
+				data:function(){
+					return {
+						count:0
+					}
+				},
+				methods:{
+					countCal:function(){
+						this.count++;
+						this.$emit('click',this.count);
+					}
+				},
+				template:'<button v-on:click="countCal">你点击了我{{count}}</button>'
+			});
+		</script>
+		<style>
+			.red{
+				color: red;
+			}
+			.active{
+				color:blue;
+			}
+		</style>
+	</body>
+</html>
